@@ -2,13 +2,29 @@
 
 Mac 菜单栏小工具：按秒显示今天已经挣到多少钱。自用，不联网，设置只存在本机。
 
-## 构建与安装
+## 下载安装
+
+到 [Releases](https://github.com/RYKK77/niuma-booster/releases) 下载 `NiumaBooster-<版本>.dmg`，打开后把「牛马加油器」拖进「应用程序」。
+
+安装包没有经过 Apple 公证，第一次打开会被系统拦住：
+
+1. 先双击打开一次，看到提示后点「完成」。
+2. 打开「系统设置 › 隐私与安全性」，在下方找到牛马加油器，点「仍要打开」，再确认一次。
+
+或者在终端里去掉隔离标记后直接打开：
+
+```bash
+xattr -dr com.apple.quarantine "/Applications/牛马加油器.app"
+```
+
+## 从源码构建
 
 需要 Xcode（或 Command Line Tools）。支持 macOS 13 及以上，Apple 芯片和 Intel 都能跑。
 
 ```bash
 ./build.sh            # 生成 build/牛马加油器.app，本地 ad-hoc 签名
 ./build.sh install    # 另外复制到 ~/Applications 并打开（开机自启需要装在这里）
+./build.sh dmg        # 另外打成 build/NiumaBooster-<版本>.dmg 安装包
 swift test            # 跑计薪逻辑的单元测试
 ```
 

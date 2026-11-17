@@ -2,6 +2,7 @@
 # 打包「牛马加油器.app」
 #   ./build.sh           编译到 build/牛马加油器.app
 #   ./build.sh install   另外复制到 ~/Applications（开机自启需要装在这里）
+#   ./build.sh dmg       另外打成 build/NiumaBooster-<版本>.dmg 安装包（发 Release 用）
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -58,7 +59,17 @@ lipo -archs "$APP/Contents/MacOS/${EXE}"
 vtool -show-build "$APP/Contents/MacOS/${EXE}" 2>/dev/null | awk '/minos/ {print "  minos " $2}' | sort -u
 codesign --verify --strict "$APP" && echo "  签名有效"
 
-if [[ "${1:-}" == "install" ]]; then
+if [[ "${1:-}" == "dmg" ]]; then
+  DMG="build/NiumaBooster-${VERSION}.dmg"
+  STAGE="build/dmg"
+  rm -rf "$STAGE" "$DMG"
+  mkdir -p "$STAGE"
+  cp -R "$APP" "$STAGE/"
+  ln -s /Applications "$STAGE/Applications"
+  hdiutil create -volname "${APP_NAME}" -srcfolder "$STAGE" -ov -format UDZO "$DMG" >/dev/null
+  rm -rf "$STAGE"
+  echo "▸ 安装包：$DMG"
+elif [[ "${1:-}" == "install" ]]; then
   mkdir -p "$HOME/Applications"
   DEST="$HOME/Applications/${APP_NAME}.app"
   pkill -x "$EXE" 2>/dev/null || true
