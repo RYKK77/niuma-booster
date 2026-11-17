@@ -60,7 +60,8 @@ enum Debug {
         }
         let boss = AppState(store: nil, fixedNow: now)
         rows.append(StatusController.attributed(StatusText.make(boss.snapshot, settings: boss.settings, boss: true)))
-        menubar(rows, labels: times + ["老板模式"], to: url.appendingPathComponent("menubar.png"))
+        let labels = ["上班中", "上班前", "午休", "已下班", "法定节假日", "调休补班", "周末", "老板模式"]
+        menubar(rows, labels: labels, to: url.appendingPathComponent("menubar.png"))
         print("已渲染到 \(url.path)")
     }
 
