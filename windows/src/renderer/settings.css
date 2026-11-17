@@ -622,6 +622,17 @@ html, body {
   gap: 6px;
 }
 
+.ext-link {
+  color: var(--accent-text);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.ext-link:hover {
+  text-decoration: underline;
+}
+
 .hidden,
 [hidden] {
   display: none !important;

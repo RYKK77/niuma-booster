@@ -303,12 +303,16 @@ namespace NiumaBooster
             ToolStripMenuItem openSettingsItem = new ToolStripMenuItem("设置…");
             openSettingsItem.Click += (s, e) => OpenSettings("salary");
 
+            ToolStripMenuItem githubItem = new ToolStripMenuItem("GitHub 开源主页 (@RYKK77)");
+            githubItem.Click += (s, e) => OpenExternalUrl("https://github.com/RYKK77/niuma-booster");
+
             ToolStripMenuItem quitItem = new ToolStripMenuItem("退出牛马加油器");
             quitItem.Click += (s, e) => QuitApp();
 
             menu.Items.Add(_bossMenuItem);
             menu.Items.Add(openPanelItem);
             menu.Items.Add(openSettingsItem);
+            menu.Items.Add(githubItem);
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add(quitItem);
 
@@ -610,6 +614,19 @@ namespace NiumaBooster
             _settingsWebView.CoreWebView2.Navigate("https://niuma.local/settings.html?tab=" + Uri.EscapeDataString(_pendingSettingsTab));
         }
 
+        private static void OpenExternalUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url)) return;
+            if (!url.StartsWith("https://github.com/", StringComparison.OrdinalIgnoreCase)) return;
+            try
+            {
+                System.Diagnostics.Process.Start(url);
+            }
+            catch
+            {
+            }
+        }
+
         private void ConfigureWebView(WebView2 wv)
         {
             wv.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
@@ -621,6 +638,19 @@ namespace NiumaBooster
                 _webDir,
                 CoreWebView2HostResourceAccessKind.Allow
             );
+            wv.CoreWebView2.NewWindowRequested += (s, e) =>
+            {
+                e.Handled = true;
+                OpenExternalUrl(e.Uri);
+            };
+            wv.CoreWebView2.NavigationStarting += (s, e) =>
+            {
+                if (!string.IsNullOrEmpty(e.Uri) && e.Uri.StartsWith("https://github.com/", StringComparison.OrdinalIgnoreCase))
+                {
+                    e.Cancel = true;
+                    OpenExternalUrl(e.Uri);
+                }
+            };
             wv.CoreWebView2.WebMessageReceived += (s, e) =>
             {
                 OnWebMessageReceived(wv, e.TryGetWebMessageAsString());

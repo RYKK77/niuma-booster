@@ -292,6 +292,32 @@ html, body {
   color: var(--fg-secondary);
 }
 
+/* 底部署名链接 */
+.panel-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding-top: 2px;
+  font-size: 11px;
+  color: var(--fg-secondary);
+}
+
+.footer-link {
+  color: var(--fg-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-link:hover {
+  color: var(--accent-text);
+  text-decoration: underline;
+}
+
+.footer-dot {
+  opacity: 0.6;
+}
+
 .hidden,
 [hidden] {
   display: none !important;
