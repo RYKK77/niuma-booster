@@ -1,0 +1,12 @@
+# SwiftPM 编译缓存
+.build/
+.swiftpm/
+Package.resolved
+
+# build.sh 产物（.app、图标中间文件）
+build/
+
+# macOS / Xcode
+.DS_Store
+xcuserdata/
+DerivedData/
