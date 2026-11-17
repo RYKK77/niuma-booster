@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:;">
+  <title>牛马加油器悬浮条</title>
+  <link rel="stylesheet" href="minibar.css">
+</head>
+<body>
+  <div id="minibar-root" class="minibar-pill tabular" role="button" tabindex="0" title="左键打开面板 · 按住拖动位置 · 右键设置">
+    <span id="minibar-icon" class="minibar-icon" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.5 2.5C1.7 4.5 2.9 5.8 5 6M14.5 2.5C14.3 4.5 13.1 5.8 11 6M5 6H11L10.4 11.2A2.4 2.4 0 0 1 5.6 11.2L5 6Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span id="minibar-badge" class="minibar-badge" hidden style="display: none;">班</span>
+    <span id="minibar-prefix" class="minibar-prefix" hidden style="display: none;">干饭中</span>
+    <span id="minibar-main" class="minibar-main">¥0.00</span>
+    <span id="minibar-check" class="minibar-check" hidden style="display: none;">✓</span>
+  </div>
+  <script src="minibar.js"></script>
+</body>
+</html>

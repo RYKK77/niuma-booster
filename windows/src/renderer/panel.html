@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:;">
+  <title>牛马加油器</title>
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <main id="panel-root" class="panel-root" role="region" aria-label="牛马加油器主面板">
+    <!-- 顶部金额与阶段状态 -->
+    <header class="panel-header">
+      <div class="header-top">
+        <span id="header-title" class="header-title">今日已到账</span>
+        <span id="day-line" class="day-line">--月--日 -- · 工作日</span>
+      </div>
+      <div id="earned-amount" class="earned-amount tabular">¥0.00</div>
+      <div id="phase-subline" class="phase-subline tabular">还没上班</div>
+    </header>
+
+    <!-- 三段式工时进度条（仅在 accrues 日显示） -->
+    <section id="progress-section" class="progress-section">
+      <div id="shift-bar" class="shift-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+      <div class="shift-times tabular">
+        <span id="work-start-label">09:00</span>
+        <span id="lunch-range-label">午休 12:00–13:30</span>
+        <span id="work-end-label">18:00</span>
+      </div>
+      <div class="progress-summary tabular">
+        <span id="progress-text">已完成 <strong>0%</strong> 有效工时</span>
+        <span id="countdown-wrapper" class="countdown-wrapper">距下班 <strong id="countdown-text" class="accent-text">0:00:00</strong></span>
+      </div>
+    </section>
+
+    <!-- 2x2 核心指标网格 -->
+    <section class="stats-grid" aria-label="收入统计">
+      <div class="stat-card">
+        <div id="daily-wage-label" class="stat-label">今日日薪</div>
+        <div id="daily-wage-value" class="stat-value tabular">¥0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">时薪</div>
+        <div id="hourly-wage-value" class="stat-value tabular">¥0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">本月累计</div>
+        <div id="month-total-value" class="stat-value tabular">¥0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">本月计薪日</div>
+        <div id="paid-days-value" class="stat-value tabular">第 0 / 0 天</div>
+      </div>
+    </section>
+
+    <!-- 里程碑卡片（仅在开启且计薪日显示） -->
+    <section id="milestone-section" class="milestone-card" aria-label="今日里程碑">
+      <div class="milestone-icon" aria-hidden="true">◎</div>
+      <div class="milestone-body">
+        <div id="milestone-title" class="milestone-title">第一个小目标马上到</div>
+        <div id="milestone-detail" class="milestone-detail tabular">今天的里程碑全部解锁</div>
+      </div>
+    </section>
+
+    <!-- 加油语录 -->
+    <div id="quote-section" class="quote-line">再坚持一下，钱就到账了。</div>
+
+    <hr class="panel-divider">
+
+    <!-- 底部操作菜单 -->
+    <nav class="menu-list" aria-label="面板操作">
+      <button id="btn-boss" type="button" class="menu-row">
+        <span id="boss-row-title" class="menu-row-title">老板模式</span>
+        <span class="menu-row-right">
+          <span id="boss-check" class="menu-check" hidden style="display: none;">✓</span>
+          <span id="boss-shortcut" class="menu-shortcut tabular">Ctrl+Alt+B</span>
+        </span>
+      </button>
+      <button id="btn-settings" type="button" class="menu-row">
+        <span class="menu-row-title">设置…</span>
+        <span class="menu-row-right">
+          <span class="menu-shortcut tabular">Ctrl+,</span>
+        </span>
+      </button>
+      <button id="btn-quit" type="button" class="menu-row">
+        <span class="menu-row-title">退出牛马加油器</span>
+        <span class="menu-row-right">
+          <span class="menu-shortcut tabular">Ctrl+Q</span>
+        </span>
+      </button>
+    </nav>
+  </main>
+  <script src="panel.js"></script>
+</body>
+</html>

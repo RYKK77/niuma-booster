@@ -73,6 +73,37 @@ swift run NiumaBooster --dump "2026-11-17 15:18:42"   # 打印该时刻的菜单
 swift run NiumaBooster --render ./render              # 把面板和设置页离屏渲染成 PNG
 ```
 
+## Windows 版（Electron）
+
+仓库中的 `windows/` 目录提供了完整的 **Windows（Electron）** 实现，与 macOS Swift 代码共存。Windows 版采用**系统托盘图标 + 点击弹出面板**的常驻形态：
+
+- **系统托盘与动态 Tooltip**：鼠标悬停托盘图标即可查看当前状态与实时到账金额（根据显示格式与非上班时间设置动态更新），左键点击托盘图标在任务栏附近弹出/收起主面板，右键打开托盘菜单。
+- **老板键（全局快捷键）**：默认支持 `Ctrl+Alt+B`（或切换为 `Ctrl+Alt+H` / 关闭），一键将托盘提示与面板中的金额全部打码为 `¥***.**`。
+- **完整复刻核心能力**：1:1 移植 `NiumaCore` 计薪引擎、2026–2027 法定节假日与调休、大小周、跨夜班、手动标记与 JSON 导入、里程碑通知、下班提醒、开机自动启动与本地 `settings.json` 持久化。
+
+### Windows 开发、测试与打包
+
+进入 `windows/` 目录后即可运行单元测试、启动应用或打包安装包：
+
+```powershell
+cd windows
+
+# 1. 运行零外部依赖的核心计薪单元测试（无需先执行 npm install）
+npm test
+node --test "src/core/**/*.test.js"
+
+# 2. 检查全部 JS 源码语法
+npm run check
+
+# 3. 安装依赖并启动桌面端应用
+npm install
+npm start
+
+# 4. 打包 Windows 免安装目录或 NSIS 安装包 / Portable 便携版
+npm run pack
+npm run dist
+```
+
 ## 计算规则
 
 - 日薪 = 月薪 ÷ 当月计薪工作日（也可选固定 21.75 天）；年薪按 12 个月折算；时薪 × 每天有效工时。
@@ -105,6 +136,10 @@ swift run NiumaBooster --render ./render              # 把面板和设置页离
 - `Sources/NiumaCore`：纯 Foundation 的计薪引擎、节假日数据、设置模型、菜单栏文案（有单测）
 - `Sources/NiumaBooster`：AppKit 菜单栏（`NSStatusItem` + 等宽数字）、SwiftUI 面板和设置窗口、全局快捷键、通知、开机自启
 - `Tests/NiumaCoreTests`：设计稿上的数字、各月计薪日、跨夜班、手动标记、大小周等
+- `windows/src/core`：Windows 版核心计薪引擎、节假日数据、设置模型、显示文案与 Node.js 内置单元测试
+- `windows/src/main`：Electron 主进程（单实例锁、系统托盘与 Tooltip、Popover 窗口定位、全局老板键、通知、开机自启、本地持久化）
+- `windows/src/renderer`：Windows 主面板（`panel.*`）与 4 页设置窗口（`settings.*`）
+- `windows/assets`：基于 `Assets/AppIcon.svg` 生成的 Windows 多尺寸应用图标与托盘图标
 
 ## 开源协议
 

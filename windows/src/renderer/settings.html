@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:;">
+  <title>牛马加油器 — 设置</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div class="settings-shell">
+    <!-- 顶部 4 标签页导航 -->
+    <header class="tabs-header" role="tablist" aria-label="设置分类">
+      <button id="tab-btn-salary" type="button" class="tab-btn is-active" role="tab" aria-selected="true" data-tab="salary">薪资</button>
+      <button id="tab-btn-schedule" type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="schedule">作息</button>
+      <button id="tab-btn-holidays" type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="holidays">节假日</button>
+      <button id="tab-btn-display" type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="display">显示</button>
+    </header>
+
+    <main class="tabs-content">
+      <!-- ==================== Tab 1: 薪资 ==================== -->
+      <section id="pane-salary" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-salary">
+        <div class="form-card">
+          <h2 class="section-title">收入</h2>
+          <div class="form-row">
+            <span class="row-label">收入类型</span>
+            <div class="segmented" role="radiogroup" aria-label="收入类型">
+              <button id="income-monthly" type="button" class="seg-btn is-active" role="radio" aria-checked="true" data-income="monthly">月薪</button>
+              <button id="income-yearly" type="button" class="seg-btn" role="radio" aria-checked="false" data-income="yearly">年薪</button>
+              <button id="income-hourly" type="button" class="seg-btn" role="radio" aria-checked="false" data-income="hourly">时薪</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label id="label-amount" for="input-amount" class="row-label">月薪金额（¥）</label>
+            <input id="input-amount" type="number" class="text-input tabular" min="0" step="any" aria-label="金额" value="20000">
+          </div>
+          <p id="income-hint" class="form-hint">税前、到手都可以，按你想看的口径填。改完实时生效。</p>
+        </div>
+
+        <div id="basis-section" class="form-card">
+          <h2 class="section-title">日薪计算方式</h2>
+          <div class="choice-stack" role="radiogroup" aria-label="日薪计算方式">
+            <button id="basis-actual" type="button" class="choice-card is-active" role="radio" aria-checked="true" data-basis="actualWorkdays">
+              <div class="choice-title">按当月实际计薪工作日</div>
+              <div class="choice-desc">工作日 − 法定节假日 + 调休补班日，带薪假照算。每个月日薪会不一样。</div>
+            </button>
+            <button id="basis-fixed" type="button" class="choice-card" role="radio" aria-checked="false" data-basis="fixed2175">
+              <div class="choice-title">固定 21.75 天</div>
+              <div class="choice-desc">劳动法的月计薪天数，每月日薪一样。</div>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h2 class="section-title">本月算出来是这样</h2>
+          <div class="metrics-chain">
+            <div class="metric-item">
+              <div id="preview-month-days-label" class="metric-label">当月计薪日</div>
+              <div id="preview-month-days-value" class="metric-value tabular">21 天</div>
+            </div>
+            <span class="metric-arrow" aria-hidden="true">→</span>
+            <div class="metric-item">
+              <div class="metric-label">日薪</div>
+              <div id="preview-daily-wage" class="metric-value tabular">¥952.38</div>
+            </div>
+            <span class="metric-arrow" aria-hidden="true">→</span>
+            <div class="metric-item">
+              <div id="preview-hourly-label" class="metric-label">时薪（7.5 小时）</div>
+              <div id="preview-hourly-wage" class="metric-value tabular">¥126.98</div>
+            </div>
+            <span class="metric-arrow" aria-hidden="true">→</span>
+            <div class="metric-item">
+              <div class="metric-label">每秒</div>
+              <div id="preview-per-second" class="metric-value accent tabular">¥0.0353</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h2 class="section-title">金额格式</h2>
+          <div class="form-row">
+            <label for="input-currency" class="row-label">货币符号</label>
+            <input id="input-currency" type="text" class="text-input short" maxlength="6" aria-label="货币符号" value="¥">
+          </div>
+          <div class="form-row">
+            <span class="row-label">小数位</span>
+            <div class="segmented" role="radiogroup" aria-label="小数位">
+              <button id="dec-0" type="button" class="seg-btn" role="radio" aria-checked="false" data-decimals="0">0 位</button>
+              <button id="dec-2" type="button" class="seg-btn is-active" role="radio" aria-checked="true" data-decimals="2">2 位</button>
+              <button id="dec-4" type="button" class="seg-btn" role="radio" aria-checked="false" data-decimals="4">4 位</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== Tab 2: 作息 ==================== -->
+      <section id="pane-schedule" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-schedule" hidden style="display: none;">
+        <div class="form-card">
+          <h2 class="section-title">上下班时间</h2>
+          <div class="form-row">
+            <label for="input-work-start" class="row-label">上班</label>
+            <input id="input-work-start" type="time" class="time-input tabular" aria-label="上班" value="09:00">
+          </div>
+          <div class="form-row">
+            <label for="input-work-end" class="row-label">下班</label>
+            <input id="input-work-end" type="time" class="time-input tabular" aria-label="下班" value="18:00">
+          </div>
+          <div class="form-row">
+            <label for="input-lunch-enabled" class="row-label">午休（不计薪）</label>
+            <input id="input-lunch-enabled" type="checkbox" class="toggle-input" aria-label="午休（不计薪）" checked>
+          </div>
+          <div id="lunch-times-group" class="sub-rows">
+            <div class="form-row">
+              <label for="input-lunch-start" class="row-label">午休开始</label>
+              <input id="input-lunch-start" type="time" class="time-input tabular" aria-label="开始时间" value="12:00">
+            </div>
+            <div class="form-row">
+              <label for="input-lunch-end" class="row-label">午休结束</label>
+              <input id="input-lunch-end" type="time" class="time-input tabular" aria-label="结束时间" value="13:30">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="schedule-preview-header">
+            <span class="section-title-inline">每天计薪时段</span>
+            <span id="schedule-effective-hours" class="effective-hours tabular">有效工时 <strong>7.5 小时</strong></span>
+          </div>
+          <div id="schedule-shift-bar" class="shift-bar large"></div>
+          <div class="shift-times tabular">
+            <span id="sched-start-text">09:00</span>
+            <span id="sched-lunch-text">午休 12:00–13:30</span>
+            <span id="sched-end-text">18:00</span>
+          </div>
+          <p id="zero-hours-warning" class="warning-text" hidden style="display: none;">有效工时是 0，检查一下上下班和午休时间。</p>
+          <p class="form-hint">下班时间早于上班时间时按跨夜班算，这一班算在上班那天（比如 22:00 上班、次日 06:00 下班）。</p>
+        </div>
+
+        <div class="form-card">
+          <h2 class="section-title">每周工作日</h2>
+          <div id="weekday-buttons" class="weekday-row" role="group" aria-label="每周工作日">
+            <button type="button" class="wd-btn is-active" data-wd="2" aria-label="周一">一</button>
+            <button type="button" class="wd-btn is-active" data-wd="3" aria-label="周二">二</button>
+            <button type="button" class="wd-btn is-active" data-wd="4" aria-label="周三">三</button>
+            <button type="button" class="wd-btn is-active" data-wd="5" aria-label="周四">四</button>
+            <button type="button" class="wd-btn is-active" data-wd="6" aria-label="周五">五</button>
+            <button type="button" class="wd-btn" data-wd="7" aria-label="周六">六</button>
+            <button type="button" class="wd-btn" data-wd="1" aria-label="周日">日</button>
+          </div>
+          <p class="form-hint">法定节假日和调休会自动叠加在上面，不用手动改。</p>
+          <div class="form-row">
+            <label for="input-big-small" class="row-label">大小周（隔一周的周六上班）</label>
+            <input id="input-big-small" type="checkbox" class="toggle-input" aria-label="大小周（隔一周的周六上班）">
+          </div>
+          <div id="big-week-group" class="sub-rows" hidden style="display: none;">
+            <span class="row-label">本周是</span>
+            <div class="choice-stack compact" role="radiogroup" aria-label="本周大小周设置">
+              <button id="btn-big-week" type="button" class="choice-card is-active" role="radio" aria-checked="true">大周（本周六上班）</button>
+              <button id="btn-small-week" type="button" class="choice-card" role="radio" aria-checked="false">小周（本周六休息）</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== Tab 3: 节假日 ==================== -->
+      <section id="pane-holidays" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-holidays" hidden style="display: none;">
+        <div class="form-card holidays-banner">
+          <div class="banner-info">
+            <div id="builtin-years-title" class="banner-title">已内置 2026、2027 年国务院放假安排</div>
+            <div id="holiday-import-hint" class="form-hint">以后的年份公布后，导入 JSON 或在日历里手动标记即可。</div>
+          </div>
+          <div class="banner-actions">
+            <button id="btn-clear-import" type="button" class="secondary-btn" hidden style="display: none;">清除导入</button>
+            <button id="btn-import-json" type="button" class="primary-btn">导入 JSON…</button>
+          </div>
+        </div>
+
+        <div class="holidays-layout">
+          <!-- 左侧月历与单日标记编辑器 -->
+          <div class="form-card calendar-box">
+            <div class="cal-nav">
+              <button id="btn-prev-month" type="button" class="icon-btn" aria-label="上个月">‹</button>
+              <span id="cal-month-title" class="cal-month-title tabular">2026 年 11 月</span>
+              <button id="btn-next-month" type="button" class="icon-btn" aria-label="下个月">›</button>
+            </div>
+            <div class="cal-weekdays">
+              <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+            </div>
+            <div id="cal-grid" class="cal-grid"></div>
+            <div class="cal-legend">
+              <span class="legend-item"><span class="tag-pill is-rest">休</span> 法定假日/手动休息</span>
+              <span class="legend-item"><span class="tag-pill is-work">班</span> 补班/手动上班</span>
+              <span class="legend-item"><span class="tag-pill is-leave">假</span> 带薪假</span>
+            </div>
+            <hr class="card-divider">
+            <div class="cal-summary tabular">
+              <span id="cal-summary-days">11 月计薪工作日 <strong>21 天</strong></span>
+              <span id="cal-summary-wage">日薪 <strong class="accent-text">¥952.38</strong></span>
+            </div>
+            <div id="cal-editor-hint" class="form-hint">点日期可改成：工作日 / 休息（不计薪）/ 带薪假（按全天计），或恢复默认。</div>
+            <div id="cal-editor-box" class="cal-editor-box" hidden style="display: none;">
+              <div id="cal-editor-title" class="cal-editor-title">11月17日 · 默认：工作日</div>
+              <div class="segmented" role="radiogroup" aria-label="手动标记类型">
+                <button id="mark-default" type="button" class="seg-btn is-active" data-mark="">默认</button>
+                <button id="mark-work" type="button" class="seg-btn" data-mark="work">工作日</button>
+                <button id="mark-rest" type="button" class="seg-btn" data-mark="rest">休息</button>
+                <button id="mark-leave" type="button" class="seg-btn" data-mark="paidLeave">带薪假</button>
+              </div>
+              <div id="mark-note-row" class="form-row" hidden style="display: none;">
+                <label for="input-mark-note" class="row-label">备注</label>
+                <input id="input-mark-note" type="text" class="text-input" aria-label="备注" placeholder="备注（比如：年假、公司放假）">
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧节假日汇总与手动标记列表 -->
+          <div class="holidays-lists">
+            <div class="form-card">
+              <h3 id="notice-list-title" class="section-title">2026 法定节假日</h3>
+              <div id="notice-list" class="item-list"></div>
+            </div>
+            <div class="form-card">
+              <h3 class="section-title">我的手动标记</h3>
+              <div id="manual-list" class="item-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== Tab 4: 显示 ==================== -->
+      <section id="pane-display" class="tab-pane" role="tabpanel" aria-labelledby="tab-btn-display" hidden style="display: none;">
+        <div class="form-card">
+          <h2 class="section-title">托盘与状态格式</h2>
+          <div class="form-row">
+            <span class="row-label">预览</span>
+            <div id="status-preview-pill" class="status-preview-pill tabular">
+              <span id="preview-pill-icon" class="preview-pill-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1.5 2.5C1.7 4.5 2.9 5.8 5 6M14.5 2.5C14.3 4.5 13.1 5.8 11 6M5 6H11L10.4 11.2A2.4 2.4 0 0 1 5.6 11.2L5 6Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span id="preview-pill-text">¥0.00</span>
+            </div>
+          </div>
+          <div class="choice-stack" role="radiogroup" aria-label="显示格式">
+            <button id="fmt-amount-only" type="button" class="choice-row is-active" role="radio" aria-checked="true" data-format="amountOnly">
+              <span>仅金额（默认）</span>
+              <span id="sample-amount-only" class="choice-sample tabular">¥0.00</span>
+            </button>
+            <button id="fmt-amount-progress" type="button" class="choice-row" role="radio" aria-checked="false" data-format="amountProgress">
+              <span>金额 + 进度</span>
+              <span id="sample-amount-progress" class="choice-sample tabular">¥0 · 0%</span>
+            </button>
+            <button id="fmt-amount-countdown" type="button" class="choice-row" role="radio" aria-checked="false" data-format="amountCountdown">
+              <span>金额 + 下班倒计时</span>
+              <span id="sample-amount-countdown" class="choice-sample tabular">¥0.00 · 0:00:00</span>
+            </button>
+            <button id="fmt-icon-only" type="button" class="choice-row" role="radio" aria-checked="false" data-format="iconOnly">
+              <span>仅图标</span>
+              <span id="sample-icon-only" class="choice-sample">金额只在面板里看</span>
+            </button>
+          </div>
+          <div class="form-row">
+            <label for="input-show-icon" class="row-label">显示牛头图标</label>
+            <input id="input-show-icon" type="checkbox" class="toggle-input" aria-label="显示牛头图标" checked>
+          </div>
+          <div class="form-row">
+            <span class="row-label">非上班时间</span>
+            <div class="segmented" role="radiogroup" aria-label="非上班时间显示">
+              <button id="off-text" type="button" class="seg-btn is-active" data-off="text">显示状态文字</button>
+              <button id="off-icon" type="button" class="seg-btn" data-off="iconOnly">只显示图标</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h2 class="section-title">老板模式</h2>
+          <div class="form-row">
+            <span class="row-label">快捷键</span>
+            <div class="segmented" role="radiogroup" aria-label="老板模式快捷键">
+              <button id="hk-ctrl-alt-b" type="button" class="seg-btn is-active" data-hotkey="ctrlOptB">Ctrl+Alt+B</button>
+              <button id="hk-ctrl-alt-h" type="button" class="seg-btn" data-hotkey="ctrlOptCmdH">Ctrl+Alt+H</button>
+              <button id="hk-off" type="button" class="seg-btn" data-hotkey="off">不使用</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label for="input-boss-now" class="row-label">现在开启（金额全部打码）</label>
+            <input id="input-boss-now" type="checkbox" class="toggle-input" aria-label="现在开启（金额全部打码）">
+          </div>
+          <p id="hotkey-warning" class="warning-text" hidden style="display: none;"></p>
+          <p class="form-hint">按下老板键后，托盘提示与面板中的金额立即切换为 ¥***.**，再按一次恢复。</p>
+        </div>
+
+        <div class="form-card">
+          <h2 class="section-title">加油</h2>
+          <div class="form-row">
+            <label for="input-milestones-enabled" class="row-label">里程碑提示（面板显示，跨过时发通知）</label>
+            <input id="input-milestones-enabled" type="checkbox" class="toggle-input" aria-label="里程碑提示" checked>
+          </div>
+          <div class="milestone-disclosure">
+            <button id="btn-toggle-milestones" type="button" class="disclosure-btn" aria-expanded="true">编辑里程碑</button>
+            <div id="milestone-editor-panel" class="milestone-editor-panel">
+              <textarea id="input-milestones-text" class="textarea-input tabular" rows="5" aria-label="里程碑列表"></textarea>
+              <div class="editor-footer">
+                <span class="form-hint">每行一个：名称,金额</span>
+                <div class="editor-actions">
+                  <button id="btn-ms-reset" type="button" class="secondary-btn">恢复默认</button>
+                  <button id="btn-ms-save" type="button" class="primary-btn">保存</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <label for="input-quotes-enabled" class="row-label">面板显示加油语录</label>
+            <input id="input-quotes-enabled" type="checkbox" class="toggle-input" aria-label="面板显示加油语录" checked>
+          </div>
+          <div class="form-row">
+            <label for="input-offwork-notif" class="row-label">下班时发通知</label>
+            <input id="input-offwork-notif" type="checkbox" class="toggle-input" aria-label="下班时发通知" checked>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <h2 class="section-title">通用</h2>
+          <div class="form-row">
+            <label for="input-login-item" class="row-label">开机自动启动</label>
+            <input id="input-login-item" type="checkbox" class="toggle-input" aria-label="开机自动启动">
+          </div>
+          <p id="login-hint" class="form-hint" hidden style="display: none;"></p>
+          <p id="login-error" class="warning-text" hidden style="display: none;"></p>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="settings.js"></script>
+</body>
+</html>

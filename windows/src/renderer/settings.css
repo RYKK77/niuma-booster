@@ -1,0 +1,628 @@
+:root {
+  --bg: #f4f4f6;
+  --card-bg: #ffffff;
+  --fg: #18181b;
+  --fg-secondary: #71717a;
+  --border: #e4e4e7;
+  --accent: #c2410c;
+  --accent-text: #9a3412;
+  --accent-soft: #fff4ec;
+  --green: #1a7f37;
+  --danger: #dc2626;
+  --subtle: #f2f3f5;
+  --track: #e3e5e8;
+  --holiday-bg: #fde7da;
+  --holiday-fg: #9a3412;
+  --work-bg: #dde3ea;
+  --work-fg: #334155;
+  --leave-bg: #dcf2e4;
+  --leave-fg: #166534;
+  --font-sans: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #18181b;
+    --card-bg: #242428;
+    --fg: #f4f4f5;
+    --fg-secondary: #a1a1aa;
+    --border: #38383e;
+    --accent: #fb923c;
+    --accent-text: #fdba74;
+    --accent-soft: #3a2416;
+    --green: #4ade80;
+    --danger: #f87171;
+    --subtle: #2f2f35;
+    --track: #3a3a3c;
+    --holiday-bg: #4a2a1a;
+    --holiday-fg: #fdba74;
+    --work-bg: #334155;
+    --work-fg: #e2e8f0;
+    --leave-bg: #14532d;
+    --leave-fg: #bbf7d0;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.settings-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* 顶部页签栏 */
+.tabs-header {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.tab-btn {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--fg-secondary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 18px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.tab-btn:hover {
+  color: var(--fg);
+  background: var(--subtle);
+}
+
+.tab-btn.is-active {
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.tabs-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 22px 28px 22px;
+}
+
+.tab-pane {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-secondary);
+  text-transform: uppercase;
+}
+
+.section-title-inline {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  min-height: 30px;
+}
+
+.sub-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--border);
+}
+
+.row-label {
+  font-size: 13px;
+  color: var(--fg);
+}
+
+.form-hint {
+  font-size: 12px;
+  color: var(--fg-secondary);
+}
+
+.warning-text {
+  font-size: 12px;
+  color: var(--danger);
+  font-weight: 500;
+}
+
+/* 输入控件 */
+.text-input,
+.time-input,
+.textarea-input {
+  background: var(--subtle);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 5px 10px;
+}
+
+.text-input {
+  width: 160px;
+  text-align: right;
+}
+
+.text-input.short {
+  width: 80px;
+}
+
+.textarea-input {
+  width: 100%;
+  resize: vertical;
+  font-family: "Cascadia Mono", "Consolas", monospace;
+  font-size: 12px;
+}
+
+.toggle-input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Segmented 按钮组 */
+.segmented {
+  display: inline-flex;
+  background: var(--subtle);
+  padding: 2px;
+  border-radius: 7px;
+  gap: 2px;
+}
+
+.seg-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--fg-secondary);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.seg-btn.is-active {
+  background: var(--card-bg);
+  color: var(--fg);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* 单选卡片 */
+.choice-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.choice-card,
+.choice-row {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--subtle);
+  color: var(--fg);
+  font-family: inherit;
+  border-radius: 8px;
+  padding: 9px 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.choice-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.choice-card.is-active,
+.choice-row.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.choice-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.choice-desc,
+.choice-sample {
+  font-size: 12px;
+  color: var(--fg-secondary);
+  margin-top: 2px;
+}
+
+/* 4 列计算链预览 */
+.metrics-chain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.metric-item {
+  flex: 1;
+  min-width: 0;
+}
+
+.metric-label {
+  font-size: 11px;
+  color: var(--fg-secondary);
+}
+
+.metric-value {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.metric-value.accent,
+.accent-text {
+  color: var(--accent-text);
+}
+
+.metric-arrow {
+  color: var(--fg-secondary);
+  font-size: 12px;
+}
+
+/* 作息预览条与星期按钮 */
+.schedule-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shift-bar {
+  height: 16px;
+  width: 100%;
+  display: flex;
+  gap: 3px;
+}
+
+.shift-seg {
+  height: 100%;
+  border-radius: 5px;
+  background: var(--accent);
+}
+
+.shift-seg.is-lunch {
+  background: var(--track);
+  border: 1px dashed var(--fg-secondary);
+  opacity: 0.65;
+}
+
+.shift-times {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--fg-secondary);
+}
+
+.weekday-row {
+  display: flex;
+  gap: 6px;
+}
+
+.wd-btn {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--subtle);
+  color: var(--fg);
+  width: 36px;
+  height: 30px;
+  border-radius: 7px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.wd-btn.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* 节假日布局与日历 */
+.holidays-banner {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.banner-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.primary-btn,
+.secondary-btn,
+.icon-btn {
+  appearance: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.primary-btn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.secondary-btn,
+.icon-btn {
+  background: var(--subtle);
+  color: var(--fg);
+}
+
+.holidays-layout {
+  display: grid;
+  grid-template-columns: 330px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.cal-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cal-month-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cal-weekdays,
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+}
+
+.cal-weekdays {
+  font-size: 11px;
+  color: var(--fg-secondary);
+}
+
+.cal-cell {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--fg-secondary);
+  min-height: 40px;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.cal-cell.is-paid {
+  background: var(--subtle);
+  color: var(--fg);
+}
+
+.cal-cell.is-today .cal-day-num {
+  font-weight: 700;
+}
+
+.cal-cell.is-manual {
+  border-color: var(--fg-secondary);
+}
+
+.cal-cell.is-selected {
+  border: 2px solid var(--accent);
+}
+
+.tag-pill {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 0 3px;
+  border-radius: 3px;
+}
+
+.tag-pill.is-rest {
+  background: var(--holiday-bg);
+  color: var(--holiday-fg);
+}
+
+.tag-pill.is-work {
+  background: var(--work-bg);
+  color: var(--work-fg);
+}
+
+.tag-pill.is-leave {
+  background: var(--leave-bg);
+  color: var(--leave-fg);
+}
+
+.cal-legend {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--fg-secondary);
+}
+
+.card-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+.cal-summary {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.cal-editor-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 6px;
+}
+
+.cal-editor-title {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.holidays-lists {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.list-row:last-child {
+  border-bottom: none;
+}
+
+.del-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--fg-secondary);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 4px;
+}
+
+/* 状态栏预览与里程碑折叠面板 */
+.status-preview-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--subtle);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.preview-pill-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent-text);
+}
+
+.milestone-disclosure {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.disclosure-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--accent-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.milestone-editor-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.editor-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editor-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.hidden,
+[hidden] {
+  display: none !important;
+}

@@ -1,0 +1,63 @@
+{
+  "name": "niuma-booster",
+  "productName": "牛马加油器",
+  "version": "1.0.0",
+  "description": "牛马加油器 Windows 桌面版（系统托盘 + 实时工时收入面板）",
+  "license": "MIT",
+  "author": "RYKK77",
+  "private": true,
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test \"src/core/**/*.test.js\"",
+    "check": "node -e \"const fs=require('fs'),path=require('path'),{execFileSync}=require('child_process');if(!fs.existsSync('src')){console.log('No src/ directory found; skipping check.');process.exit(0);}const files=fs.readdirSync('src',{recursive:true}).filter(f=>f.endsWith('.js')).map(f=>path.join('src',f)).filter(f=>fs.statSync(f).isFile());for(const f of files){try{execFileSync(process.execPath,['--check',f],{stdio:'inherit'});}catch(e){process.exit(e.status?e.status:1);}}console.log('Syntax OK: '+files.length+' file(s)');\"",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "44.2.0",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "local.niuma.booster",
+    "productName": "牛马加油器",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "assets/**/*"
+    ],
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "牛马加油器",
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

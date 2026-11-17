@@ -1,0 +1,108 @@
+:root {
+  --pill-bg: rgba(255, 255, 255, 0.95);
+  --pill-fg: #18181b;
+  --pill-secondary: #71717a;
+  --pill-border: rgba(24, 24, 27, 0.15);
+  --pill-hover-border: #c2410c;
+  --accent: #c2410c;
+  --green: #1a7f37;
+  --badge-bg: #dde3ea;
+  --badge-fg: #334155;
+  --font-sans: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pill-bg: rgba(30, 30, 34, 0.94);
+    --pill-fg: #f4f4f5;
+    --pill-secondary: #a1a1aa;
+    --pill-border: rgba(255, 255, 255, 0.16);
+    --pill-hover-border: #fb923c;
+    --accent: #fb923c;
+    --green: #4ade80;
+    --badge-bg: #334155;
+    --badge-fg: #e2e8f0;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+html, body {
+  background: transparent;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  width: max-content;
+  height: max-content;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.minibar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 16px;
+  background: var(--pill-bg);
+  color: var(--pill-fg);
+  border: 1px solid var(--pill-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.minibar-pill:hover {
+  border-color: var(--pill-hover-border);
+}
+
+.minibar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.minibar-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+}
+
+.minibar-prefix {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--pill-secondary);
+}
+
+.minibar-main {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.minibar-check {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.hidden,
+[hidden] {
+  display: none !important;
+}
