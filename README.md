@@ -14,6 +14,10 @@
   macOS 13+ · Apple 芯片 / Intel 通用 · 不联网
 </p>
 
+<p align="center">
+  简体中文 · <a href="README.en.md">English</a>
+</p>
+
 ## 它能做什么
 
 - **菜单栏实时到账**：上班时间里金额每秒往上跳，数字等宽，不会左右抖。
