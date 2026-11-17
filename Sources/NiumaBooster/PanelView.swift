@@ -79,6 +79,17 @@ struct PanelView: View {
                     .keyboardShortcut("q", modifiers: .command)
             }
             .padding(.top, -6)
+
+            // 底部开源署名与链接
+            HStack(spacing: 6) {
+                FooterLink(title: "作者 @RYKK77", url: About.authorURL, help: "访问作者 GitHub 主页")
+                Text("·").opacity(0.6)
+                FooterLink(title: "GitHub 项目主页", url: About.repoURL, help: "访问项目开源仓库")
+            }
+            .font(.system(size: 11))
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity)
+            .padding(.top, -8)
         }
         .padding(.horizontal, 14)
         .padding(.top, 16)
@@ -206,6 +217,34 @@ struct Stat: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
         .background(Theme.card, in: RoundedRectangle(cornerRadius: 8))
+    }
+}
+
+/// 作者与开源仓库信息，面板底部和设置「关于」共用
+enum About {
+    static let authorURL = URL(string: "https://github.com/RYKK77")!
+    static let repoURL = URL(string: "https://github.com/RYKK77/niuma-booster")!
+    static var version: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0"
+    }
+}
+
+/// 面板底部的小号链接，悬停变主色加下划线
+struct FooterLink: View {
+    let title: String
+    let url: URL
+    var help = ""
+    @State private var hover = false
+
+    var body: some View {
+        Link(destination: url) {
+            Text(title)
+                .underline(hover)
+                .foregroundStyle(hover ? Theme.accentText : Color.secondary)
+        }
+        .buttonStyle(.plain)
+        .help(help)
+        .onHover { hover = $0 }
     }
 }
 

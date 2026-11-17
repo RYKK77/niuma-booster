@@ -557,6 +557,15 @@ struct DisplayTab: View {
                 }
                 if let loginError { Text(loginError).font(.system(size: 12)).foregroundStyle(.red) }
             }
+            Section("关于") {
+                LabeledContent("作者 GitHub 主页") {
+                    Link("@RYKK77 (github.com/RYKK77)", destination: About.authorURL)
+                }
+                LabeledContent("项目开源地址") {
+                    Link("github.com/RYKK77/niuma-booster", destination: About.repoURL)
+                }
+                Hint("牛马加油器 v\(About.version) · MIT 开源协议 · 纯本地运行不联网")
+            }
         }
         .formStyle(.grouped)
         .frame(width: tabWidth, height: 780)

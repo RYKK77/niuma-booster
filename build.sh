@@ -46,7 +46,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>LSMinimumSystemVersion</key><string>${MIN_MACOS}</string>
   <key>LSUIElement</key><true/>
   <key>NSHighResolutionCapable</key><true/>
-  <key>NSHumanReadableCopyright</key><string>自用，不联网</string>
+  <key>NSHumanReadableCopyright</key><string>© RYKK77 · MIT 开源 · github.com/RYKK77/niuma-booster</string>
 </dict>
 </plist>
 PLIST
