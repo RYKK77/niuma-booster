@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/RYKK77/niuma-booster/releases/latest">Download the latest release</a> ·
-  macOS 13+ · Universal (Apple silicon / Intel) · Works offline
+  macOS 13+ · Universal (Apple silicon / Intel) · Works offline · MIT licensed
 </p>
 
 <p align="center">
@@ -107,3 +107,7 @@ For later years, import a JSON file in Settings › 节假日 (Holidays):
 - `Sources/NiumaCore`: pure-Foundation pay engine, holiday data, settings model and menu bar text (unit tested)
 - `Sources/NiumaBooster`: AppKit menu bar item (`NSStatusItem` with monospaced digits), SwiftUI panel and settings window, global hotkey, notifications, launch at login
 - `Tests/NiumaCoreTests`: the numbers from the design, paid days per month, overnight shifts, manual marks, alternating six-day weeks and more
+
+## License
+
+[MIT](LICENSE): free to use, modify, distribute and use commercially, as long as the copyright notice and license text are kept.

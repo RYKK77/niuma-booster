@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/RYKK77/niuma-booster/releases/latest">下载最新版</a> ·
-  macOS 13+ · Apple 芯片 / Intel 通用 · 不联网
+  macOS 13+ · Apple 芯片 / Intel 通用 · 不联网 · MIT 开源
 </p>
 
 <p align="center">
@@ -105,3 +105,7 @@ swift run NiumaBooster --render ./render              # 把面板和设置页离
 - `Sources/NiumaCore`：纯 Foundation 的计薪引擎、节假日数据、设置模型、菜单栏文案（有单测）
 - `Sources/NiumaBooster`：AppKit 菜单栏（`NSStatusItem` + 等宽数字）、SwiftUI 面板和设置窗口、全局快捷键、通知、开机自启
 - `Tests/NiumaCoreTests`：设计稿上的数字、各月计薪日、跨夜班、手动标记、大小周等
+
+## 开源协议
+
+[MIT](LICENSE)：可以自由使用、修改、分发，也可以商用，只要保留原作者的版权声明和许可声明即可。
