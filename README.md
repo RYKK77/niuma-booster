@@ -6,12 +6,12 @@
 
 <p align="center">
   上班的每一秒都在进账。<br>
-  Mac 菜单栏按秒显示「今天已经挣到多少钱」，给打工人一点实实在在的动力。
+  Mac 菜单栏 / Windows 桌面悬浮条与系统托盘按秒显示「今天已经挣到多少钱」，给打工人一点实实在在的动力。
 </p>
 
 <p align="center">
   <a href="https://github.com/RYKK77/niuma-booster/releases/latest">下载最新版</a> ·
-  macOS 13+ · Apple 芯片 / Intel 通用 · 不联网 · MIT 开源
+  macOS 13+（Apple 芯片 / Intel） · Windows 10/11（64 位） · 不联网 · MIT 开源
 </p>
 
 <p align="center">
@@ -42,7 +42,11 @@
 
 ## 下载安装
 
-到 [Releases](https://github.com/RYKK77/niuma-booster/releases) 下载 `NiumaBooster-<版本>.dmg`，打开后把「牛马加油器」拖进「应用程序」。
+到 [Releases](https://github.com/RYKK77/niuma-booster/releases) 下载对应系统的安装包：
+
+### macOS（1.4 MB）
+
+下载 `NiumaBooster-<版本>.dmg`，打开后把「牛马加油器」拖进「应用程序」。
 
 安装包没有经过 Apple 公证，第一次打开会被系统拦住：
 
@@ -54,6 +58,15 @@
 ```bash
 xattr -dr com.apple.quarantine "/Applications/牛马加油器.app"
 ```
+
+### Windows 10 / 11（380 KB 安装包 / 1.1 MB 单文件便携版）
+
+提供两种包，无需额外安装运行时，开箱即用：
+
+- **安装版**：下载 `NiumaBooster-Setup-<版本>.exe`（约 380 KB），双击安装后自动生成桌面与开始菜单快捷方式。
+- **免安装便携版**：下载 `NiumaBooster-Portable-<版本>.exe`（约 1.1 MB），单文件直接双击运行。
+
+启动后在屏幕右下角（任务栏上方）显示实时跳动的**悬浮金额条**（可自由拖拽位置，左键单击弹出详细面板，右键打开设置），并在右下角**系统托盘**常驻牛头图标。默认老板键为 `Ctrl+Alt+B`。
 
 ## 从源码构建
 
@@ -73,33 +86,28 @@ swift run NiumaBooster --dump "2026-11-17 15:18:42"   # 打印该时刻的菜单
 swift run NiumaBooster --render ./render              # 把面板和设置页离屏渲染成 PNG
 ```
 
-## Windows 版（Electron）
+## Windows 版构建与开发（WebView2 原生 / Electron）
 
-仓库中的 `windows/` 目录提供了完整的 **Windows（Electron）** 实现，与 macOS Swift 代码共存。Windows 版采用**系统托盘图标 + 点击弹出面板**的常驻形态：
+仓库中的 `windows/` 目录同时提供**基于 Windows 系统内置 `.NET 4.8 + WebView2` 的超轻量原生构建**（安装包仅 380 KB）以及 **Electron** 开发与测试环境，与 macOS Swift 代码完整共存：
 
-- **系统托盘与动态 Tooltip**：鼠标悬停托盘图标即可查看当前状态与实时到账金额（根据显示格式与非上班时间设置动态更新），左键点击托盘图标在任务栏附近弹出/收起主面板，右键打开托盘菜单。
-- **老板键（全局快捷键）**：默认支持 `Ctrl+Alt+B`（或切换为 `Ctrl+Alt+H` / 关闭），一键将托盘提示与面板中的金额全部打码为 `¥***.**`。
+- **桌面悬浮金额条 + 系统托盘**：右下角胶囊式悬浮条每秒等宽跳动显示金额（支持拖拽位置、左键单击弹出/收起主面板、右键设置；在设置中选择「仅图标」或非上班时间「只显示图标」时自动隐藏悬浮条，仅保留托盘图标与动态 Tooltip）。
+- **老板键（全局快捷键）**：默认支持 `Ctrl+Alt+B`（或切换为 `Ctrl+Alt+H` / 关闭），一键将悬浮条、托盘提示与面板中的金额全部打码为 `¥***.**`。
 - **完整复刻核心能力**：1:1 移植 `NiumaCore` 计薪引擎、2026–2027 法定节假日与调休、大小周、跨夜班、手动标记与 JSON 导入、里程碑通知、下班提醒、开机自动启动与本地 `settings.json` 持久化。
 
-### Windows 开发、测试与打包
-
-进入 `windows/` 目录后即可运行单元测试、启动应用或打包安装包：
+### Windows 打包与测试命令
 
 ```powershell
+# 1. 一键编译 Windows 超轻量原生版（无需安装额外 SDK，生成 380KB 安装包与 1.1MB 便携版）
+powershell -ExecutionPolicy Bypass -File windows\scripts\build-native.ps1
+
+# 2. 运行零外部依赖的核心计薪单元测试與语法检查
 cd windows
-
-# 1. 运行零外部依赖的核心计薪单元测试（无需先执行 npm install）
 npm test
-node --test "src/core/**/*.test.js"
-
-# 2. 检查全部 JS 源码语法
 npm run check
 
-# 3. 安装依赖并启动桌面端应用
+# 3. 使用 Electron 模式本地开发调试或打包
 npm install
 npm start
-
-# 4. 打包 Windows 免安装目录或 NSIS 安装包 / Portable 便携版
 npm run pack
 npm run dist
 ```
@@ -136,9 +144,10 @@ npm run dist
 - `Sources/NiumaCore`：纯 Foundation 的计薪引擎、节假日数据、设置模型、菜单栏文案（有单测）
 - `Sources/NiumaBooster`：AppKit 菜单栏（`NSStatusItem` + 等宽数字）、SwiftUI 面板和设置窗口、全局快捷键、通知、开机自启
 - `Tests/NiumaCoreTests`：设计稿上的数字、各月计薪日、跨夜班、手动标记、大小周等
+- `windows/native`：Windows 轻量原生宿主（`NiumaHost.cs`，基于系统自带 `.NET 4.8` + `WebView2`，单文件内嵌资源）
 - `windows/src/core`：Windows 版核心计薪引擎、节假日数据、设置模型、显示文案与 Node.js 内置单元测试
 - `windows/src/main`：Electron 主进程（单实例锁、系统托盘与 Tooltip、Popover 窗口定位、全局老板键、通知、开机自启、本地持久化）
-- `windows/src/renderer`：Windows 主面板（`panel.*`）与 4 页设置窗口（`settings.*`）
+- `windows/src/renderer`：Windows 桌面悬浮金额条（`minibar.*`）、主面板（`panel.*`）与 4 页设置窗口（`settings.*`）
 - `windows/assets`：基于 `Assets/AppIcon.svg` 生成的 Windows 多尺寸应用图标与托盘图标
 
 ## 开源协议

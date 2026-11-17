@@ -6,12 +6,12 @@
 
 <p align="center">
   Every second at work is money in the bank.<br>
-  A macOS menu bar app that shows, second by second, how much you've earned today.
+  A macOS menu bar & Windows desktop/tray app that shows, second by second, how much you've earned today.
 </p>
 
 <p align="center">
   <a href="https://github.com/RYKK77/niuma-booster/releases/latest">Download the latest release</a> ·
-  macOS 13+ · Universal (Apple silicon / Intel) · Works offline · MIT licensed
+  macOS 13+ (Apple silicon / Intel) · Windows 10/11 (x64) · Works offline · MIT licensed
 </p>
 
 <p align="center">
@@ -44,6 +44,8 @@
 
 ## Install
 
+### macOS (1.4 MB)
+
 Download `NiumaBooster-<version>.dmg` from [Releases](https://github.com/RYKK77/niuma-booster/releases), open it, and drag 牛马加油器 into Applications.
 
 The app isn't notarized by Apple, so macOS blocks it the first time you open it:
@@ -56,6 +58,15 @@ Or remove the quarantine flag in Terminal and open it directly:
 ```bash
 xattr -dr com.apple.quarantine "/Applications/牛马加油器.app"
 ```
+
+### Windows 10 / 11 (380 KB installer / 1.1 MB portable)
+
+Download from [Releases](https://github.com/RYKK77/niuma-booster/releases):
+
+- **Installer**: `NiumaBooster-Setup-<version>.exe` (~380 KB), creates desktop and Start Menu shortcuts.
+- **Portable**: `NiumaBooster-Portable-<version>.exe` (~1.1 MB), single standalone executable.
+
+On Windows, a compact floating earnings pill sits above the taskbar (draggable, left-click to toggle the detail panel, right-click for settings) alongside a system tray icon. Default boss mode shortcut is `Ctrl+Alt+B`.
 
 ## Build from source
 
@@ -73,6 +84,13 @@ For debugging:
 ```bash
 swift run NiumaBooster --dump "2026-11-17 15:18:42"   # prints the menu bar text and calculations at that moment (default settings)
 swift run NiumaBooster --render ./render              # renders the panel and settings pages to PNG offscreen
+```
+
+On Windows 10 / 11 (uses built-in `.NET 4.8` + `WebView2`, no extra SDK required):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File windows\scripts\build-native.ps1
+cd windows && npm test
 ```
 
 ## How pay is calculated
@@ -107,6 +125,8 @@ For later years, import a JSON file in Settings › 节假日 (Holidays):
 - `Sources/NiumaCore`: pure-Foundation pay engine, holiday data, settings model and menu bar text (unit tested)
 - `Sources/NiumaBooster`: AppKit menu bar item (`NSStatusItem` with monospaced digits), SwiftUI panel and settings window, global hotkey, notifications, launch at login
 - `Tests/NiumaCoreTests`: the numbers from the design, paid days per month, overnight shifts, manual marks, alternating six-day weeks and more
+- `windows/native`: lightweight native Windows host (`NiumaHost.cs`, built on Windows `.NET 4.8` + `WebView2`)
+- `windows/src`: Windows core pay engine, renderer UI (`minibar.*`, `panel.*`, `settings.*`), Electron dev host and unit tests
 
 ## License
 
