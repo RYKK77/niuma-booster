@@ -36,9 +36,12 @@
 
   function syncSize() {
     if (!els.root || !api || typeof api.resizePanel !== 'function') return;
+    // 先临时设为 inline-flex 测量真实内容宽高
+    els.root.style.width = 'max-content';
     const rect = els.root.getBoundingClientRect();
-    const w = Math.max(44, Math.ceil((rect && rect.width) || els.root.offsetWidth || 110));
+    const w = Math.max(56, Math.ceil((rect && rect.width) || els.root.scrollWidth || 110) + 4);
     const h = Math.max(32, Math.ceil((rect && rect.height) || els.root.offsetHeight || 32));
+    els.root.style.width = '100%';
     if (Math.abs(w - lastReportedWidth) >= 2 || Math.abs(h - lastReportedHeight) >= 2) {
       lastReportedWidth = w;
       lastReportedHeight = h;

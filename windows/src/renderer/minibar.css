@@ -36,8 +36,8 @@ html, body {
   background: transparent;
   overflow: hidden;
   font-family: var(--font-sans);
-  width: max-content;
-  height: max-content;
+  width: 100%;
+  height: 100%;
 }
 
 .tabular {
@@ -48,14 +48,15 @@ html, body {
 .minibar-pill {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  height: 32px;
+  width: 100%;
+  height: 100%;
   padding: 0 12px;
   border-radius: 16px;
   background: var(--pill-bg);
   color: var(--pill-fg);
   border: 1px solid var(--pill-border);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;

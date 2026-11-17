@@ -140,6 +140,53 @@ namespace NiumaBooster
         [DllImport("user32.dll")]
         private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
+        [DllImport("gdi32.dll")]
+        private static extern IntPtr CreateRoundRectRgn(int x1, int y1, int x2, int y2, int cx, int cy);
+
+        [DllImport("gdi32.dll")]
+        private static extern bool DeleteObject(IntPtr hObject);
+
+        private double GetDpiScale()
+        {
+            try
+            {
+                using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+                {
+                    double s = g.DpiX / 96.0;
+                    return s > 0.5 ? s : 1.0;
+                }
+            }
+            catch
+            {
+                return 1.0;
+            }
+        }
+
+        private int ScalePx(int cssPx)
+        {
+            return (int)Math.Ceiling(cssPx * GetDpiScale());
+        }
+
+        private static void ApplyRoundedCorners(Form form, int radiusPx)
+        {
+            if (form == null || form.IsDisposed || form.Width <= 0 || form.Height <= 0) return;
+            IntPtr hRgn = IntPtr.Zero;
+            try
+            {
+                hRgn = CreateRoundRectRgn(0, 0, form.Width + 1, form.Height + 1, radiusPx, radiusPx);
+                Region oldRgn = form.Region;
+                form.Region = Region.FromHrgn(hRgn);
+                if (oldRgn != null) oldRgn.Dispose();
+            }
+            catch
+            {
+            }
+            finally
+            {
+                if (hRgn != IntPtr.Zero) DeleteObject(hRgn);
+            }
+        }
+
         private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
         private const uint SWP_NOACTIVATE = 0x0010;
         private const uint SWP_SHOWWINDOW = 0x0040;
@@ -416,7 +463,7 @@ namespace NiumaBooster
                 StartPosition = FormStartPosition.Manual,
                 TopMost = true,
                 BackColor = Color.FromArgb(30, 30, 34),
-                Size = new Size(_miniBarWidth, _miniBarHeight),
+                Size = new Size(ScalePx(_miniBarWidth), ScalePx(_miniBarHeight)),
                 Icon = _appIcon
             };
             PositionMiniBar();
@@ -461,7 +508,7 @@ namespace NiumaBooster
                 StartPosition = FormStartPosition.Manual,
                 TopMost = true,
                 BackColor = Color.White,
-                Size = new Size(_panelWidth, _panelHeight),
+                Size = new Size(ScalePx(_panelWidth), ScalePx(_panelHeight)),
                 Icon = _appIcon
             };
 
@@ -522,8 +569,8 @@ namespace NiumaBooster
             _settingsForm = new Form
             {
                 Text = "牛马加油器 — 设置",
-                Size = new Size(740, 700),
-                MinimumSize = new Size(660, 560),
+                Size = new Size(ScalePx(740), ScalePx(700)),
+                MinimumSize = new Size(ScalePx(660), ScalePx(560)),
                 StartPosition = FormStartPosition.CenterScreen,
                 Icon = _appIcon
             };
@@ -837,8 +884,8 @@ namespace NiumaBooster
                     }
                     else if (action == "moveBy" && _miniBarForm != null)
                     {
-                        int dx = dict.ContainsKey("dx") ? Convert.ToInt32(dict["dx"]) : 0;
-                        int dy = dict.ContainsKey("dy") ? Convert.ToInt32(dict["dy"]) : 0;
+                        int dx = dict.ContainsKey("dx") ? ScalePx(Convert.ToInt32(dict["dx"])) : 0;
+                        int dy = dict.ContainsKey("dy") ? ScalePx(Convert.ToInt32(dict["dy"])) : 0;
                         _miniBarCustomPos = new Point(_miniBarForm.Left + dx, _miniBarForm.Top + dy);
                         PositionMiniBar();
                     }
@@ -871,13 +918,17 @@ namespace NiumaBooster
         {
             if (_miniBarForm == null || _miniBarForm.IsDisposed) return;
             Rectangle wa = Screen.PrimaryScreen.WorkingArea;
-            int w = _miniBarWidth;
-            int h = _miniBarHeight;
-            int x = _miniBarCustomPos.HasValue ? _miniBarCustomPos.Value.X : (wa.Right - w - 16);
-            int y = _miniBarCustomPos.HasValue ? _miniBarCustomPos.Value.Y : (wa.Bottom - h - 6);
-            x = Math.Max(wa.Left + 4, Math.Min(x, wa.Right - w - 4));
-            y = Math.Max(wa.Top + 4, Math.Min(y, wa.Bottom - h - 4));
+            int w = ScalePx(_miniBarWidth);
+            int h = ScalePx(_miniBarHeight);
+            int padRight = ScalePx(16);
+            int padBottom = ScalePx(6);
+            int minPad = ScalePx(4);
+            int x = _miniBarCustomPos.HasValue ? _miniBarCustomPos.Value.X : (wa.Right - w - padRight);
+            int y = _miniBarCustomPos.HasValue ? _miniBarCustomPos.Value.Y : (wa.Bottom - h - padBottom);
+            x = Math.Max(wa.Left + minPad, Math.Min(x, wa.Right - w - minPad));
+            y = Math.Max(wa.Top + minPad, Math.Min(y, wa.Bottom - h - minPad));
             _miniBarForm.Bounds = new Rectangle(x, y, w, h);
+            ApplyRoundedCorners(_miniBarForm, h);
         }
 
         private void PositionPanel()
@@ -890,15 +941,17 @@ namespace NiumaBooster
             }
             Screen scr = Screen.FromPoint(anchor);
             Rectangle wa = scr.WorkingArea;
-            int w = Math.Min(_panelWidth, wa.Width - 16);
-            int h = Math.Min(_panelHeight, wa.Height - 16);
+            int gap = ScalePx(8);
+            int w = Math.Min(ScalePx(_panelWidth), wa.Width - gap * 2);
+            int h = Math.Min(ScalePx(_panelHeight), wa.Height - gap * 2);
             int x = anchor.X - w / 2;
             int y = (_miniBarForm != null && _miniBarForm.Visible)
-                ? (_miniBarForm.Top - h - 8)
-                : (wa.Bottom - h - 8);
-            x = Math.Max(wa.Left + 8, Math.Min(x, wa.Right - w - 8));
-            y = Math.Max(wa.Top + 8, Math.Min(y, wa.Bottom - h - 8));
+                ? (_miniBarForm.Top - h - gap)
+                : (wa.Bottom - h - gap);
+            x = Math.Max(wa.Left + gap, Math.Min(x, wa.Right - w - gap));
+            y = Math.Max(wa.Top + gap, Math.Min(y, wa.Bottom - h - gap));
             _panelForm.Bounds = new Rectangle(x, y, w, h);
+            ApplyRoundedCorners(_panelForm, ScalePx(20));
         }
 
         public void ShowPanel()

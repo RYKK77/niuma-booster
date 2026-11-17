@@ -57,6 +57,10 @@ if (-not (Test-Path $csc)) {
     throw "未找到系统内置 C# 编译器: $csc"
 }
 
+# 若旧实例正在运行导致 exe 文件占用，先安全结束
+Get-Process | Where-Object { $_.ProcessName -match "NiumaBooster|牛马加油器" } | Stop-Process -Force -ErrorAction SilentlyContinue
+Start-Sleep -Milliseconds 300
+
 $portableOut = Join-Path $distDir "NiumaBooster-Portable-1.0.0.exe"
 $iconIco = Join-Path $assetsDir "icon.ico"
 
