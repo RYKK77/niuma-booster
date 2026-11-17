@@ -50,23 +50,32 @@ enum Debug {
         snap(HolidaysTab(state: holidays), url.appendingPathComponent("settings-holidays.png"), .aqua)
         snap(DisplayTab(state: state), url.appendingPathComponent("settings-display.png"), .aqua)
 
+        // 菜单栏 + 展开的面板（README 头图）
+        snap(HeroShot(state: state), url.appendingPathComponent("hero.png"), .aqua, background: false)
+
         // 菜单栏各状态
-        let times = ["2026-11-17 15:18:42", "2026-11-17 08:30:00", "2026-11-17 12:40:00", "2026-11-17 18:30:00",
-                     "2026-10-02 10:00:00", "2026-10-10 15:18:42", "2026-11-21 10:00:00"]
-        var rows: [NSAttributedString] = []
-        for t in times {
+        let cases: [(String, String, Bool)] = [
+            ("上班中", "2026-11-17 15:18:42", false), ("上班前", "2026-11-17 08:30:00", false),
+            ("午休", "2026-11-17 12:40:00", false), ("已下班", "2026-11-17 18:30:00", false),
+            ("法定节假日", "2026-10-02 10:00:00", false), ("调休补班", "2026-10-10 15:18:42", false),
+            ("周末", "2026-11-21 10:00:00", false), ("老板模式", "2026-11-17 15:18:42", true),
+        ]
+        let rows: [StatesShot.Row] = cases.map { label, t, boss in
             let st = AppState(store: nil, fixedNow: parse(t))
-            rows.append(StatusController.attributed(StatusText.make(st.snapshot, settings: st.settings, boss: false)))
+            return StatesShot.Row(label: label,
+                                  line: StatusText.make(st.snapshot, settings: st.settings, boss: boss),
+                                  clock: FakeMenuBar.clock(st.snapshot.now, calendar: st.calendar))
         }
-        let boss = AppState(store: nil, fixedNow: now)
-        rows.append(StatusController.attributed(StatusText.make(boss.snapshot, settings: boss.settings, boss: true)))
-        let labels = ["上班中", "上班前", "午休", "已下班", "法定节假日", "调休补班", "周末", "老板模式"]
-        menubar(rows, labels: labels, to: url.appendingPathComponent("menubar.png"))
+        snap(StatesShot(rows: rows), url.appendingPathComponent("menubar.png"), .aqua, background: false)
         print("已渲染到 \(url.path)")
     }
 
-    private static func snap<V: View>(_ view: V, _ file: URL, _ appearance: NSAppearance.Name) {
-        let host = NSHostingView(rootView: view.background(Color(nsColor: .windowBackgroundColor)))
+    /// 按 2 倍像素渲染，README 里看起来清楚
+    private static func snap<V: View>(_ view: V, _ file: URL, _ appearance: NSAppearance.Name, background: Bool = true) {
+        let root = Group {
+            if background { view.background(Color(nsColor: .windowBackgroundColor)) } else { view }
+        }
+        let host = NSHostingView(rootView: root)
         host.appearance = NSAppearance(named: appearance)
         let size = host.fittingSize
         host.frame = NSRect(origin: .zero, size: size)
@@ -75,31 +84,114 @@ enum Debug {
         win.contentView = host
         host.layoutSubtreeIfNeeded()
         RunLoop.current.run(until: Date().addingTimeInterval(0.4))
-        guard let rep = host.bitmapImageRepForCachingDisplay(in: host.bounds) else { return }
+        let scale: CGFloat = 2
+        guard let rep = NSBitmapImageRep(bitmapDataPlanes: nil,
+                                         pixelsWide: Int(size.width * scale), pixelsHigh: Int(size.height * scale),
+                                         bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+                                         colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0) else { return }
+        rep.size = size
         host.cacheDisplay(in: host.bounds, to: rep)
         try? rep.representation(using: .png, properties: [:])?.write(to: file)
     }
+}
 
-    private static func menubar(_ rows: [NSAttributedString], labels: [String], to file: URL) {
-        let h: CGFloat = 30, w: CGFloat = 520
-        let img = NSImage(size: NSSize(width: w, height: h * CGFloat(rows.count)), flipped: true) { _ in
-            NSAppearance(named: .aqua)!.performAsCurrentDrawingAppearance {
-            for (i, r) in rows.enumerated() {
-                let y = CGFloat(i) * h
-                NSColor(srgbRed: 0.965, green: 0.969, blue: 0.976, alpha: 1).setFill()
-                NSRect(x: 0, y: y, width: w, height: h - 2).fill()
-                NSAttributedString(string: labels[i], attributes: [.font: NSFont.systemFont(ofSize: 11), .foregroundColor: NSColor.gray])
-                    .draw(at: NSPoint(x: 10, y: y + 8))
-                let titleW = r.size().width
-                let x = w - 16 - titleW
-                OxIcon.make(size: 16, color: .black, template: false).draw(in: NSRect(x: x - 22, y: y + 6, width: 16, height: 16))
-                r.draw(at: NSPoint(x: x, y: y + 6))
+// MARK: - README 截图用的仿真菜单栏
+
+private let wallpaper = LinearGradient(
+    colors: [Color(red: 0.96, green: 0.84, blue: 0.74), Color(red: 0.78, green: 0.84, blue: 0.91)],
+    startPoint: .topLeading, endPoint: .bottomTrailing)
+
+struct FakeMenuBar: View {
+    let line: StatusLine
+    let clock: String
+    var selected = false
+
+    static func clock(_ d: Date, calendar: Calendar) -> String {
+        let c = calendar.dateComponents([.month, .day, .weekday, .hour, .minute], from: d)
+        let wd = ["", "周日", "周一", "周二", "周三", "周四", "周五", "周六"][c.weekday ?? 0]
+        return String(format: "%d月%d日 %@ %02d:%02d", c.month ?? 0, c.day ?? 0, wd, c.hour ?? 0, c.minute ?? 0)
+    }
+
+    var body: some View {
+        HStack(spacing: 16) {
+            Spacer(minLength: 0)
+            HStack(spacing: 5) {
+                Image(nsImage: OxIcon.make(size: 16, color: .black, template: false))
+                if let b = line.badge {
+                    Text(b).font(.system(size: 10, weight: .semibold)).foregroundStyle(Color(white: 0.4))
+                }
+                if let p = line.prefix { Text(p).foregroundStyle(Color(white: 0.4)) }
+                if !line.main.isEmpty { Text(line.main) }
+                if line.check { Image(systemName: "checkmark").font(.system(size: 11, weight: .bold)).foregroundStyle(Theme.green) }
             }
+            .padding(.horizontal, 8)
+            .frame(height: 22)
+            .background(selected ? Color.black.opacity(0.1) : .clear, in: RoundedRectangle(cornerRadius: 5))
+            Image(systemName: "wifi")
+            Image(systemName: "battery.75percent")
+            Image(systemName: "magnifyingglass")
+            Text(clock)
+        }
+        .font(.system(size: 13, weight: .medium))
+        .monospacedDigit()
+        .foregroundStyle(Color(white: 0.1))
+        .padding(.horizontal, 14)
+        .frame(height: 30)
+        .background(Color.white.opacity(0.7))
+    }
+}
+
+/// 菜单栏 + 点开的面板
+struct HeroShot: View {
+    @ObservedObject var state: AppState
+    var body: some View {
+        let line = StatusText.make(state.snapshot, settings: state.settings, boss: false)
+        ZStack(alignment: .topTrailing) {
+            wallpaper
+            VStack(spacing: 0) {
+                FakeMenuBar(line: line, clock: FakeMenuBar.clock(state.snapshot.now, calendar: state.calendar), selected: true)
+                Spacer()
             }
-            return true
+            PanelView(state: state, openSettings: {})
+                .background(Color(white: 0.99), in: RoundedRectangle(cornerRadius: 12))
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.black.opacity(0.12), lineWidth: 0.5))
+                .compositingGroup()
+                .shadow(color: .black.opacity(0.22), radius: 18, y: 10)
+                .padding(.top, 38)
+                .padding(.trailing, 150)
         }
-        if let tiff = img.tiffRepresentation, let rep = NSBitmapImageRep(data: tiff) {
-            try? rep.representation(using: .png, properties: [:])?.write(to: file)
+        .frame(width: 760, height: 640)
+        .environment(\.colorScheme, .light)
+    }
+}
+
+/// 菜单栏的各种状态
+struct StatesShot: View {
+    struct Row: Identifiable {
+        let label: String
+        let line: StatusLine
+        let clock: String
+        var id: String { label }
+    }
+    let rows: [Row]
+
+    var body: some View {
+        VStack(spacing: 10) {
+            ForEach(rows) { r in
+                HStack(spacing: 14) {
+                    Text(r.label)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(Color(white: 0.2))
+                        .frame(width: 76, alignment: .leading)
+                    FakeMenuBar(line: r.line, clock: r.clock)
+                        .background(wallpaper)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+            }
         }
+        .padding(20)
+        .frame(width: 600)
+        .background(Color(white: 0.97))
+        .environment(\.colorScheme, .light)
     }
 }

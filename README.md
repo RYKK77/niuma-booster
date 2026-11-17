@@ -18,6 +18,10 @@
   简体中文 · <a href="README.en.md">English</a>
 </p>
 
+<p align="center">
+  <img src="docs/hero.png" width="760" alt="菜单栏显示今日已到账金额，点开是详细面板">
+</p>
+
 ## 它能做什么
 
 - **菜单栏实时到账**：上班时间里金额每秒往上跳，数字等宽，不会左右抖。
@@ -32,12 +36,7 @@
 - **显示随你选**：仅金额 / 金额 + 进度 / 金额 + 下班倒计时 / 仅图标。
 - **下班通知、开机自启**，设置只存在本机，不联网、不上传。
 
-<table>
-  <tr>
-    <td align="center"><img src="docs/menubar.png" width="420" alt="菜单栏的各种状态"><br>菜单栏的各种状态</td>
-    <td align="center"><img src="docs/panel.png" width="260" alt="下拉面板"><br>点开后的面板</td>
-  </tr>
-</table>
+<p align="center"><img src="docs/menubar.png" width="600" alt="菜单栏的各种状态"><br>菜单栏会跟着上下班状态自动变化</p>
 
 <p align="center"><img src="docs/holidays.png" width="560" alt="节假日设置"><br>节假日设置：内置法定节假日，点日期就能手动标记</p>
 

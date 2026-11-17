@@ -18,6 +18,10 @@
   <a href="README.md">简体中文</a> · English
 </p>
 
+<p align="center">
+  <img src="docs/hero.png" width="760" alt="The menu bar shows today's earnings; click it for the detail panel">
+</p>
+
 > "牛马" (literally "ox and horse") is Chinese internet slang for an overworked office worker. The app's interface is in Simplified Chinese, and its holiday data follows the official schedule of mainland China.
 
 ## What it does
@@ -34,12 +38,7 @@
 - **Choose what the menu bar shows**: amount only / amount + progress / amount + countdown / icon only.
 - **End-of-day notification and launch at login.** Settings stay on your Mac. Nothing is uploaded.
 
-<table>
-  <tr>
-    <td align="center"><img src="docs/menubar.png" width="420" alt="Menu bar states"><br>Menu bar states</td>
-    <td align="center"><img src="docs/panel.png" width="260" alt="Drop-down panel"><br>The drop-down panel</td>
-  </tr>
-</table>
+<p align="center"><img src="docs/menubar.png" width="600" alt="Menu bar states"><br>The menu bar changes with your workday: working, before work, lunch, done for the day, public holiday, make-up workday, weekend, boss mode</p>
 
 <p align="center"><img src="docs/holidays.png" width="560" alt="Holiday settings"><br>Holiday settings: public holidays are built in, click a date to override it</p>
 
